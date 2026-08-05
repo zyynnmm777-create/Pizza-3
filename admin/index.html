@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>🍕 لوحة تحكم الإدارة - الفطيرة الساخنة</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body {
+      background: #111;
+      color: #fff;
+      padding: 15px;
+      padding-bottom: 90px;
+      direction: rtl;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #1a1a1a, #800000);
+      padding: 15px 20px;
+      border-radius: 15px;
+      border-bottom: 2px solid #ff4d4d;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 18px;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #ff4d4d;
+    }
+
+    h3 {
+      font-size: 15px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff4d4d, #800000);
+      color: #fff;
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    .btn-danger {
+      background: #8b0000;
+    }
+
+    .btn-secondary {
+      background: #333;
+    }
+
+    .btn-success {
+      background: #176b3a;
+    }
+
+    /* الأقسام */
+
+    .admin-section {
+      display: none;
+    }
+
+    .admin-section.active {
+      display: block;
+    }
+
+    /* البطاقات */
+
+    .card-box {
+      background: #1b1b1b;
+      border: 1px solid #333;
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.4);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #888;
+      font-size: 15px;
+    }
+
+    /* الشريط السفلي */
+
+    nav.admin-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background: #181818;
+      border-top: 1px solid #333;
+      display: flex;
+      align-items: center;
+      padding: 10px 5px;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      background: none;
+      border: none;
+      color: #aaa;
+      font-family: 'Cairo', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: .2s;
+    }
+
+    .nav-item.active {
+      color: #ff4d4d;
+      font-weight: bold;
+    }
+
+    .nav-item span.icon {
+      font-size: 18px;
+      position: relative;
+    }
+
+    /* الإعدادات */
+
+    .setting-title {
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .setting-description {
+      color: #aaa;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* الحقول */
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #ccc;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 10px;
+      background: #222;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 8px;
+      outline: none;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: #ff4d4d;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* حالة المطعم */
+
+    .restaurant-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #333;
+      border-radius: 30px;
+      transition: .3s;
+    }
+
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      right: 4px;
+      top: 4px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .3s;
+    }
+
+    .switch input:checked + .slider {
+      background: #8b0000;
+    }
+
+    .switch input:checked + .slider:before {
+      transform: translateX(-24px);
+    }
+
+    /* رأس إدارة المنتجات */
+
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .products-header h3 {
+      color: #ff4d4d;
+    }
+
+    /* بطاقات المنتجات */
+
+    .product-admin-card {
+      background: #151515;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .product-admin-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .product-admin-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-admin-name {
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .product-admin-meta {
+      color: #999;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .product-admin-price {
+      color: #ff4d4d;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .product-actions button {
+      flex: 1;
+      padding: 7px;
+      border: none;
+      border-radius: 7px;
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .edit-product-btn {
+      background: #333;
+    }
+
+    .delete-product-btn {
+      background: #700000;
+    }
+
+    /* نافذة إضافة / تعديل المنتج */
+
+    .product-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.8);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .product-modal.show {
+      display: flex;
+    }
+
+    .product-modal-box {
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #1b1b1b;
+      border: 1px solid #444;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.6);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    .modal-header h3 {
+      color: #ff4d4d;
+    }
+
+    .close-modal {
+      background: #333;
+      color: #fff;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+    }
+
+    /* الصور */
+
+    .image-list {
+      margin-top: 8px;
+    }
+
+    .image-row {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .image-row input {
+      flex: 1;
+    }
+
+    .remove-image-btn {
+      width: 35px;
+      border: none;
+      border-radius: 7px;
+      background: #700000;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .add-image-btn {
+      margin-top: 5px;
+      background: #333;
+      border: none;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px;
+    }
+
+    /* الأسعار المتعددة */
+
+    .prices-box {
+      background: #151515;
+      border: 1px solid #333;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    .price-row {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .price-row input {
+      flex: 1;
+    }
+
+    .remove-price-btn {
+      width: 35px;
+      border: none;
+      border-radius: 7px;
+      background: #700000;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .add-price-btn {
+      background: #333;
+      border: none;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px;
+    }
+
+    /* رسائل */
+
+    .empty-products {
+      text-align: center;
+      color: #888;
+      padding: 25px 10px;
+      font-size: 13px;
+    }
+
+    .success-text {
+      color: #42d17b;
+    }
+
+    .error-text {
+      color: #ff4d4d;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- رأس الصفحة -->
+
+  <header>
+    <h1>🍕 لوحة الإدارة</h1>
+    <button class="btn" onclick="refreshCurrentSection()">🔄 تحديث</button>
+  </header>
+
+
+  <!-- ========================================================= -->
+  <!-- الطلبات -->
+  <!-- ========================================================= -->
+
+  <div id="section-orders" class="admin-section active">
+
+    <h2>📦 الطلبات الواردة</h2>
+
+    <div id="adminOrdersList">
+      <div class="loading">
+        جاري تحميل الطلبات...
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- خدمة العملاء -->
+  <!-- ========================================================= -->
+
+  <div id="section-support" class="admin-section">
+
+    <h2>💬 رسائل خدمة العملاء</h2>
+
+    <div id="adminSupportList">
+      <div class="loading">
+        لا توجد استفسارات جديدة حالياً
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- التقييمات -->
+  <!-- ========================================================= -->
+
+  <div id="section-reviews" class="admin-section">
+
+    <h2>⭐ تقييمات التوصيل والخدمة</h2>
+
+    <div id="adminReviewsList">
+      <div class="loading">
+        لا توجد تقييمات مسجلة بعد
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- الإعدادات -->
+  <!-- ========================================================= -->
+
+  <div id="section-settings" class="admin-section">
+
+    <h2>⚙️ إعدادات المطعم</h2>
+
+
+    <!-- حالة المطعم -->
+
+    <div class="card-box">
+
+      <div class="restaurant-status">
+
+        <div>
+          <div class="setting-title">
+            🔴 حالة المطعم الآن
+          </div>
+
+          <div class="setting-description">
+            عند إغلاق المطعم، لن يتمكن الزبائن من إرسال طلبات جديدة.
+          </div>
+        </div>
+
+        <label class="switch">
+
+          <input
+            type="checkbox"
+            id="restaurantStatusToggle"
+            onchange="toggleRestaurantStatus(this)"
+          >
+
+          <span class="slider"></span>
+
+        </label>
+
+      </div>
+
+    </div>
+
+
+    <!-- رسالة التنبيه -->
+
+    <div class="card-box">
+
+      <div class="setting-title">
+        📢 رسالة التنبيه العلوية للزبائن
+      </div>
+
+      <div class="setting-description" style="margin-bottom:10px;">
+        ستظهر هذه الرسالة في صفحة الزبون.
+      </div>
+
+      <input
+        type="text"
+        id="announcementInput"
+        class="form-input"
+        placeholder="مثال: عروض خاصة بمناسبة نهاية الأسبوع!"
+      >
+
+      <button
+        class="btn"
+        style="margin-top:10px;"
+        onclick="saveAnnouncement()"
+      >
+        💾 حفظ رسالة التنبيه
+      </button>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- إدارة المنتجات -->
+    <!-- ========================================================= -->
+
+    <div class="card-box">
+
+      <div class="products-header">
+
+        <h3>
+          🍕 إدارة المنتجات
+        </h3>
+
+        <button
+          class="btn"
+          onclick="openProductModal()"
+        >
+          ＋ إضافة منتج
+        </button>
+
+      </div>
+
+      <div
+        class="setting-description"
+        style="margin-bottom:12px;"
+      >
+        من هنا يمكنك إضافة وتعديل وحذف المنتجات الموجودة في قائمة المطعم.
+        التعديلات سيتم حفظها في قاعدة بيانات Supabase.
+      </div>
+
+
+      <!-- قائمة المنتجات -->
+
+      <div id="adminProductsList">
+
+        <div class="loading">
+          جاري تحميل المنتجات...
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- نافذة إضافة / تعديل منتج -->
+  <!-- ========================================================= -->
+
+  <div
+    id="productModal"
+    class="product-modal"
+  >
+
+    <div class="product-modal-box">
+
+      <div class="modal-header">
+
+        <h3 id="productModalTitle">
+          ➕ إضافة منتج
+        </h3>
+
+        <button
+          class="close-modal"
+          onclick="closeProductModal()"
+        >
+          ✕
+        </button>
+
+      </div>
+
+
+      <!-- نخزن ID المنتج عند التعديل -->
+
+      <input
+        type="hidden"
+        id="productId"
+      >
+
+
+      <!-- اسم المنتج -->
+
+      <div class="form-group">
+
+        <label>
+          اسم المنتج
+        </label>
+
+        <input
+          type="text"
+          id="productName"
+          class="form-input"
+          placeholder="مثال: بيتزا مارغريتا"
+        >
+
+      </div>
+
+
+      <!-- التصنيف -->
+
+      <div class="form-group">
+
+        <label>
+          التصنيف
+        </label>
+
+        <select
+          id="productCategory"
+          class="form-select"
+        >
+
+          <option value="appetizers">
+            🥔 مقبلات
+          </option>
+
+          <option value="pizza">
+            🍕 بيتزا
+          </option>
+
+          <option value="burgers">
+            🍔 برغر
+          </option>
+
+          <option value="sandwiches">
+            🥪 سندويشات
+          </option>
+
+          <option value="meals">
+            🍗 وجبات
+          </option>
+
+          <option value="drinks">
+            🥤 مشروبات
+          </option>
+
+          <option value="desserts">
+            🍰 حلويات
+          </option>
+
+          <option value="other">
+            📦 أخرى
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- التصنيف الفرعي -->
+
+      <div class="form-group">
+
+        <label>
+          التصنيف الفرعي
+        </label>
+
+        <input
+          type="text"
+          id="productSubcat"
+          class="form-input"
+          placeholder="اختياري"
+        >
+
+      </div>
+
+
+      <!-- السعر الأساسي -->
+
+      <div class="form-group">
+
+        <label>
+          السعر الأساسي
+        </label>
+
+        <input
+          type="number"
+          id="productBasePrice"
+          class="form-input"
+          placeholder="مثال: 500"
+          min="0"
+        >
+
+      </div>
+
+
+      <!-- الوصف -->
+
+      <div class="form-group">
+
+        <label>
+          الوصف
+        </label>
+
+        <textarea
+          id="productDescription"
+          class="form-textarea"
+          placeholder="اكتب مكونات ووصف المنتج..."
+        ></textarea>
+
+      </div>
+
+
+      <!-- الأسعار المتعددة -->
+
+      <div class="form-group">
+
+        <label>
+          💰 أسعار إضافية / أحجام
+        </label>
+
+        <div
+          id="pricesContainer"
+          class="prices-box"
+        ></div>
+
+        <button
+          type="button"
+          class="add-price-btn"
+          onclick="addPriceRow()"
+        >
+          ＋ إضافة سعر
+        </button>
+
+      </div>
+
+
+      <!-- الصور -->
+
+      <div class="form-group">
+
+        <label>
+          🖼️ روابط صور المنتج
+        </label>
+
+        <div
+          id="imagesContainer"
+          class="image-list"
+        ></div>
+
+        <button
+          type="button"
+          class="add-image-btn"
+          onclick="addImageRow()"
+        >
+          ＋ إضافة رابط صورة
+        </button>
+
+      </div>
+
+
+      <!-- أزرار النافذة -->
+
+      <div class="modal-actions">
+
+        <button
+          class="btn btn-secondary"
+          onclick="closeProductModal()"
+        >
+          إلغاء
+        </button>
+
+        <button
+          class="btn btn-success"
+          onclick="saveProduct()"
+        >
+          💾 حفظ المنتج
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================= -->
+  <!-- الشريط السفلي -->
+  <!-- ========================================================= -->
+
+  <nav class="admin-bottom-nav">
+
+    <button
+      class="nav-item active"
+      onclick="switchAdminTab('orders', this)"
+    >
+
+      <span class="icon">
+        📦
+      </span>
+
+      الطلبات
+
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="switchAdminTab('support', this)"
+    >
+
+      <span class="icon">
+
+        💬
+
+        <span
+          id="adminSupportBadge"
+          style="
+            position:absolute;
+            top:-8px;
+            right:-12px;
+            background:red;
+            color:white;
+            border-radius:50%;
+            padding:1px 5px;
+            font-size:10px;
+            display:none;
+          "
+        >
+          0
+        </span>
+
+      </span>
+
+      العملاء
+
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="switchAdminTab('reviews', this)"
+    >
+
+      <span class="icon">
+        ⭐
+      </span>
+
+      التقييمات
+
+    </button>
+
+
+    <button
+      class="nav-item"
+      onclick="switchAdminTab('settings', this)"
+    >
+
+      <span class="icon">
+        ⚙️
+      </span>
+
+      الإعدادات
+
+    </button>
+
+  </nav>
+
+
+  <!-- ملف JavaScript الخاص بالإدارة -->
+
+  <script src="admin.js"></script>
+
+</body>
+  </html>
