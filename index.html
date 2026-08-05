@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍕 الفطيرة الساخنة - Pizza Hot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- تنبيه حالة المطعم (يظهر تلقائياً إذا كان مغلقاً من لوحة الإدارة) -->
+  <div id="restaurantClosedBanner" style="display:none; background:#b71c1c; color:white; text-align:center; padding:10px; font-weight:bold; font-size:14px; position:fixed; top:0; left:0; width:100%; z-index:9999;">
+    ⚠️ عذراً، المطعم مغلق حالياً ونستقبل الطلبات في أوقات العمل الرسمية.
+  </div>
+
+  <div id="splash">
+    <img src="https://i.ibb.co/0RdxNTdS/1.png" class="header-logo-img" alt="شعار المطعم">
+    <div class="loader-logo">الفطيرة الساخنة</div>
+    <div class="loader-sub">مطعم pizza hot واصل لعندك وين ما كنت</div>
+  </div>
+
+  <div class="floating-cart-btn" id="floatingCartBtn" onclick="openCart()" title="السلة">
+    🛒
+    <span id="floatingCartCount">0</span>
+  </div>
+
+  <div id="sideMenu">
+    <div class="menu-top">
+      <img src="https://i.ibb.co/0RdxNTdS/1.png" alt="شعار">
+      <span>الفطيرة الساخنة</span>
+    </div>
+    <div class="menu-item" onclick="showPage('home')">✦ الرئيسية</div>
+    <div class="menu-item" onclick="openCategory('pizza')">🍕 قسم البيتزا</div>
+    <div class="menu-item" onclick="openCart()">🛒 السلة</div>
+    <div class="menu-item" onclick="showPage('offersPage')">🔥 العروض</div>
+    <div class="menu-item" onclick="showPage('ordersPage')">🛵 سجل الطلبات</div>
+    <div class="menu-item" onclick="showPage('profilePage')">👤 حسابي وعنواني</div>
+    
+    <!-- الخيار الجديد المضاف للقائمة الجانبية -->
+    <div class="menu-item" onclick="showPage('deliveryFeePage')">📍 أجور التوصيل</div>
+
+    <!-- زر تواصل معنا عبر الواتساب في القائمة الجانبية -->
+    <a href="https://wa.me/963951873318" target="_blank" class="menu-item" style="color: #25D366; font-weight: bold; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+      💬 تواصل معنا
+    </a>
+
+    <!-- تذييل القائمة الجانبية (Sidebar Footer) -->
+    <div class="sidebar-footer">
+      <img src="https://i.ibb.co/0RdxNTdS/1.png" class="header-logo-img sidebar-logo" alt="شعار">
+      <h4 class="logo">Pizza Hot-Delivery</h4>
+      <div style="color: #ff4d4d; font-weight: bold; font-size: 15px; letter-spacing: 0.5px; margin-top: 2px;">(فرع-كفرسوسة)</div>
+    </div>
+  </div>
+  <div id="overlay" onclick="closeMenu()"></div>
+
+  <header>
+    <div class="header-icons"><span onclick="openMenu()" style="cursor:pointer">☰</span></div>
+    <div class="header-brand" onclick="goHome()">
+      <img src="https://i.ibb.co/0RdxNTdS/1.png" class="header-logo-img" alt="شعار">
+      <div style="display: flex; flex-direction: column; width: 100%;">
+        <div class="logo">Pizza Hot-Delivery</div>
+        <div style="color: #ff4d4d; font-weight: bold; font-size: 15px; letter-spacing: 0.5px; line-height: 1.1; margin-top: 2px; width: 100%;">(فرع-كفرسوسة)</div>
+      </div>
+    </div>
+    <div class="header-icons">
+      <span onclick="showPage('searchPage')" style="cursor:pointer; font-size: 20px;" title="بحث">🔍</span>
+      <!-- شارة الرقم الأحمر فوق أيقونة خدمة العملاء -->
+      <span onclick="openCustomerService()" style="cursor:pointer; font-size: 20px; position: relative;" title="خدمة العملاء">
+        🎧
+        <span id="clientSupportBadge" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; padding: 2px 5px; font-size: 9px; font-weight: bold; display: none;">0</span>
+      </span>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <div class="page active" id="home">
+    <div class="slider">
+      <img src="https://i.ibb.co/rR4Dx4F9/0012.png" onclick="openCategory('pizza')" loading="lazy">
+      <img src="https://i.ibb.co/JRPYLVT3/image.png" onclick="openCategory('appetizers')" loading="lazy">
+      <img src="https://i.ibb.co/5xFDjG06/IMG-20260724-WA0004.jpg" onclick="openCategory('sauces')" loading="lazy">
+    </div>
+    <h2 class="title">أقسام المنيو</h2>
+    <div class="categories">
+      <div class="cat" style="background-image: url('https://i.ibb.co/j9XMLZ36/0019.png');" onclick="openCategory('pizza')"><span>بيتزا 🍕</span></div>
+      <div class="cat" style="background-image: url('https://i.ibb.co/JRPYLVT3/image.png');" onclick="openCategory('appetizers')"><span>مقبلات وبطاطا 🍟</span></div>
+      <div class="cat" style="background-image: url('https://i.ibb.co/5xFDjG06/IMG-20260724-WA0004.jpg');" onclick="openCategory('sauces')"><span>صوصات 🍯</span></div>
+      <div class="cat" style="background-image: url('https://i.ibb.co/cS6x6wv8/IMG-20260724-WA0001.jpg');" onclick="openCategory('drinks')"><span>مشروبات باردة 🥤</span></div>
+    </div>
+    <h2 class="title">الأكثر طلباً</h2>
+    <div class="products" id="homeProducts"></div>
+  </div>
+
+  <!-- CATEGORY -->
+  <div class="page" id="categoryPage">
+    <div class="top">
+      <div class="back" onclick="goBack()">→</div>
+      <h2 id="catTitle"></h2>
+    </div>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="sort-row">
+      <select class="sort-select" onchange="sortProducts(this.value)">
+        <option value="">ترتيب افتراضي</option>
+        <option value="asc">السعر: من الأقل</option>
+        <option value="desc">السعر: من الأعلى</option>
+      </select>
+    </div>
+    <div class="products" id="catProducts"></div>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div class="page" id="productPage">
+    <div class="top"><div class="back" onclick="goBack()">→</div></div>
+    <div class="product-imgs" id="productImgs"></div>
+    <h2 class="product-title" id="productName"></h2>
+    <div class="product-price" id="productPrice"></div>
+    <p class="desc" id="productDesc"></p>
+    
+    <div class="options" id="productOptionsContainer">
+      <label style="font-size:14px; color:#ccc;">اختر الحجم:</label>
+      <select id="sizeSelect" onchange="updateDynamicPrice()">
+        <option value="" disabled selected>-- اختر حجم البيتزا المناسب --</option>
+        <option value="اكس سمول">اكس سمول</option>
+        <option value="صغير">صغير</option>
+        <option value="وسط">وسط</option>
+        <option value="كبير">كبير</option>
+      </select>
+      
+      <label style="font-size:14px; color:#ccc; margin-top:10px; display:block;">تخصيص الأطراف:</label>
+      <select id="edgeSelect" onchange="updateDynamicPrice()">
+        <option value="أطراف عادية">أطراف عادية</option>
+        <option value="محشية الاطراف" id="edgeOptionText">محشية الأطراف (+100 ل.س)</option>
+      </select>
+    </div>
+
+    <div class="stars-row" id="starsRow">
+      <span class="star" onclick="rateProd(1)">★</span>
+      <span class="star" onclick="rateProd(2)">★</span>
+      <span class="star" onclick="rateProd(3)">★</span>
+      <span class="star" onclick="rateProd(4)">★</span>
+      <span class="star" onclick="rateProd(5)">★</span>
+    </div>
+    <p id="ratingText" style="font-size:13px;color:#aaa;margin-top:5px;"></p>
+    
+    <button class="btn" onclick="addToCart()">إضافة للسلة 🛒</button>
+  </div>
+
+  <!-- CART PAGE -->
+  <div class="page" id="cartPage">
+    <div class="top"><div class="back" onclick="goBack()">→</div><h2>🛒 السلة</h2></div>
+    <div id="cartItems"></div>
+    
+    <h2 id="totalPrice" style="margin-top:15px;font-size:18px"></h2>
+    
+    <button class="btn" id="checkoutBtn" onclick="checkout()">إتمام الطلب 🚀</button>
+    <div id="whatsappButtonContainer" style="margin-top:10px;"></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="page" id="searchPage">
+    <h2 class="title">البحث في المنيو</h2>
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" placeholder="ابحث عن بيتزا، مقبلات، صوص..." oninput="debounceSearch(this.value)">
+    </div>
+    <div class="products" id="searchResults"></div>
+  </div>
+
+  <!-- PROFILE / LOGIN -->
+  <div class="page" id="profilePage">
+    <div id="loginSection">
+      <h2 class="title">معلومات الزبون وعنوان التوصيل</h2>
+      <div class="login-box">
+        <input type="text" id="loginName" placeholder="الاسم الكامل">
+        <input type="tel" id="loginPhone" placeholder="رقم الموبايل (مثلاً: 0991234567)">
+        
+        <div id="deliveryFields">
+          <input type="text" id="loginLocation" placeholder="العنوان التفصيلي (الشارع، الطابق)">
+          <button type="button" onclick="getMyLocation()" style="width:100%; padding:12px; background-color:#2e7d32; color:white; border:none; border-radius:14px; margin-bottom:12px; cursor:pointer; font-weight:bold;">
+            تحديد موقعي الحالي بالـ GPS 📍
+          </button>
+        </div>
+
+        <input type="hidden" id="lat">
+        <input type="hidden" id="lng">
+        <input type="hidden" id="locationValue">
+
+        <button class="btn" onclick="doLogin()">حفظ وتأكيد البيانات 🚀</button>
+      </div>
+    </div>
+    
+    <div id="profileSection" style="display:none">
+      <div class="profile">
+        <div class="avatar" id="userAvatarContainer" onclick="openAvatarModal()" title="انقر لتعديل الصورة">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
+        <h2 style="margin-top:12px; color:#fff;" id="profileName"></h2>
+        <p style="margin-top:4px;color:#aaa;" id="profilePhone"></p>
+        <p style="margin-top:2px;color:#ff4d4d;font-size:14px;">مطعم الفطيرة الساخنة - خدمة التوصيل السريع</p>
+      </div>
+      <div class="profile-box">
+        <div class="item" onclick="showPage('ordersPage')"><span>🛵 سجل الطلبات</span><span>›</span></div>
+        <div class="item" onclick="showPage('offersPage')"><span>🔥 العروض</span><span>›</span></div>
+        <div class="item" onclick="openCart()"><span>🛒 السلة</span><span>›</span></div>
+        <div class="item" onclick="doLogout()"><span>🛑 تعديل البيانات / تسجيل الخروج</span><span>›</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OFFERS PAGE -->
+  <div class="page" id="offersPage">
+    <div class="top"><div class="back" onclick="goBack()">→</div><h2>🔥 العروض الخاصة</h2></div>
+    <div id="offersItems" class="products"></div>
+  </div>
+
+  <!-- ORDERS PAGE -->
+  <div class="page" id="ordersPage">
+    <div class="top"><div class="back" onclick="goBack()">→</div><h2>🛵 سجل الطلبات وتتبع الحالات</h2></div>
+    <div id="ordersList" style="padding: 5px;">
+      <div style="text-align:center; color:#aaa;">جاري تحميل الطلبات...</div>
+    </div>
+  </div>
+
+  <!-- صفحة أجور التوصيل الجديدة -->
+  <div class="page" id="deliveryFeePage">
+    <div class="top"><div class="back" onclick="goBack()">→</div><h2>📍 حساب أجور التوصيل</h2></div>
+    <div style="padding: 20px; text-align: center;">
+      <p style="color: #ccc; font-size: 15px; margin-bottom: 20px;">الرجاء ادخال موقعك الجغرافي (GPS) لحساب أجور التوصيل بدقة لعندك:</p>
+      
+      <button class="btn" style="background-color: #2e7d32; margin-bottom: 20px;" onclick="calculateUserDeliveryFee()">
+        تحديد موقعي وحساب أجور التوصيل 📍
+      </button>
+
+      <div id="deliveryFeeResultCard" style="background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 12px; display: none; margin-top: 20px;">
+        <h3 style="color: #ff4d4d; margin-bottom: 10px;">نتيجة الحساب</h3>
+        <p id="distanceText" style="color: #aaa; font-size: 14px; margin-bottom: 8px;"></p>
+        <p id="feeResultText" style="color: #fff; font-size: 18px; font-weight: bold;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تقييم التوصيل -->
+  <div class="order-modal" id="deliveryRatingModal" style="display:none;">
+    <div class="order-modal-content">
+      <h3 style="margin-bottom: 15px; color:#ff4d4d; text-align:center;">تقييم خدمة التوصيل والطلب</h3>
+      <p style="text-align:center; color:#aaa; font-size:13px; margin-bottom:15px;">كيف كانت تجربة توصيل طلبك اليوم؟</p>
+      
+      <div class="stars-row" id="deliveryStarsRow" style="justify-content:center; display:flex; gap:10px; font-size:28px; cursor:pointer; margin-bottom:15px;">
+        <span class="d-star" onclick="rateDelivery(1)">★</span>
+        <span class="d-star" onclick="rateDelivery(2)">★</span>
+        <span class="d-star" onclick="rateDelivery(3)">★</span>
+        <span class="d-star" onclick="rateDelivery(4)">★</span>
+        <span class="d-star" onclick="rateDelivery(5)">★</span>
+      </div>
+      
+      <textarea id="deliveryFeedbackNote" placeholder="اكتب ملاحظتك للمطعم (اختياري)..." style="width:100%; height:80px; background:#222; border:1px solid #444; color:#fff; padding:10px; border-radius:8px; margin-bottom:15px; resize:none;"></textarea>
+      
+      <button class="btn" onclick="submitDeliveryRating()">إرسال التقييم 🌟</button>
+      <button class="btn btn-dark" style="margin-top:10px; background:#333;" onclick="closeDeliveryRatingModal()">لاحقاً</button>
+    </div>
+  </div>
+
+  <!-- نافذة تفاصيل الطلب -->
+  <div class="order-modal" id="orderDetailsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
+    <div class="order-modal-content" style="background:#1a1a1a; border:1px solid #444; width:90%; max-width:400px; border-radius:12px; padding:20px; color:#fff; max-height:80vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">
+        <h3 style="margin:0; font-size:16px; color:#ff4d4d;">📋 تفاصيل الطلب</h3>
+        <button onclick="closeOrderDetailsModal()" style="background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">&times;</button>
+      </div>
+      <div id="orderDetailsBody"></div>
+      <div style="margin-top:15px; text-align:center;">
+        <button class="btn" style="width:100%; padding:10px;" onclick="closeOrderDetailsModal()">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- موديول تعديل صورة البروفايل -->
+  <div id="avatarModal">
+    <div class="avatar-modal-content">
+      <h3 style="margin-bottom: 15px; color:#fff;">صورة الحساب الشخصي</h3>
+      <div id="modalAvatarPreviewContainer" class="avatar-preview">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      </div>
+      <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleFileSelected(event)">
+      <button class="btn" style="margin-top: 0; margin-bottom: 10px;" onclick="document.getElementById('avatarFileInput').click()">📷 تغيير الصورة</button>
+      <button class="btn btn-dark" style="margin-top: 0;" onclick="closeAvatarModal()">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- شريط السلة الذكي الأسفل -->
+  <div class="floating-cart-bar" id="floatingCartBar" onclick="openCart()">
+    <div>
+      <span style="font-weight: bold; font-size: 15px;">السلة (<span id="barItemCount">0</span> عناصر)</span>
+    </div>
+    <div style="font-weight: 800; font-size: 16px;">
+      <span id="barTotalPrice">0</span> ل.س 🛒
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="bottom-nav">
+    <div class="nav-btn active-nav" onclick="showPage('home',this)"> 🍕</div>
+    <div class="nav-btn" onclick="showPage('offersPage',this)">🔥</div>
+    <div class="nav-btn" onclick="showPage('ordersPage',this)">🛵</div>
+    <div class="nav-btn" onclick="showPage('profilePage',this)">👤</div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+  <!-- سكربت فحص وتحديث شارة إشعارات العملاء -->
+  <script>
+    function checkClientUnreadSupport() {
+      if (typeof user === 'undefined' || !user || !user.phone) return;
+      let cleanPhone = String(user.phone).trim().replace(/\D/g, '').slice(-9);
+
+      fetch(`/.netlify/functions/support-messages?phone=${encodeURIComponent(user.phone)}`)
+      .then(res => res.json())
+      .then(data => {
+        let messages = Array.isArray(data) ? data : (data.messages || []);
+        let clientMsgs = messages.filter(m => {
+          let mPhone = String(m.customerPhone || '').trim().replace(/\D/g, '').slice(-9);
+          return mPhone === cleanPhone;
+        });
+
+        let adminReplies = clientMsgs.filter(m => m.sender === 'admin');
+        let badge = document.getElementById('clientSupportBadge');
+        if (badge) {
+          if (adminReplies.length > 0) {
+            badge.style.display = 'inline-block';
+            badge.innerText = adminReplies.length;
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+      }).catch(err => console.log(err));
+    }
+    setInterval(checkClientUnreadSupport, 5000);
+  </script>
+</body>
+</html>
